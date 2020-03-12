@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"H Paterson"
+	],
+	"copyright": "Copyright © 2020, H Paterson",
+	"description": "Source code styling tool.",
+	"license": "BSL-1.0.",
+	"name": "crop"
+}

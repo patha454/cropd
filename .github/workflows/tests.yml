@@ -1,0 +1,47 @@
+me: CI
+
+on: [push]
+
+jobs:
+  
+  lint:
+    
+    name: Lint D
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup D environment
+      run: |
+        curl https://dlang.org/install.sh | bash -s install ldc
+        source ~/dlang/$(~/dlang/install.sh list)/activate
+        echo "::set-env name=PATH::$PATH"
+        echo "::set-env name=DMD::$DMD"
+        echo "::set-env name=DC::$DC"
+        echo "::set-env name=LIBRARY_PATH::$LIBRARY_PATH"
+        echo "::set-env name=LD_LIBRARY_PATH::$LD_LIBRARY_PATH"
+    - name: Check syntax
+      run: dub lint --syntax-check
+      if: always()
+    - name: Check style
+      run: dub lint --style-check
+      if: always() 
+      
+  unittest:
+    
+    name: Unit test D
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup D environment
+      run: |
+        curl https://dlang.org/install.sh | bash -s install ldc
+        source ~/dlang/$(~/dlang/install.sh list)/activate
+        echo "::set-env name=PATH::$PATH"
+        echo "::set-env name=DMD::$DMD"
+        echo "::set-env name=DC::$DC"
+        echo "::set-env name=LIBRARY_PATH::$LIBRARY_PATH"
+        echo "::set-env name=LD_LIBRARY_PATH::$LD_LIBRARY_PATH"
+    - name: Unit test D
+      run: dub test
