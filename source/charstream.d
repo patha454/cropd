@@ -43,7 +43,7 @@ unittest
  * `CharStream` is a wrapper around file, with additional
  * eror checking, and line/column number tracking.
  *
- * New line symbols such as "NL" and "LF" (`\n` and `\r`)
+ * New line symbols such as *LF* and *CR* (`\n` and `\r`)
  * are significant characters to the question of code styling,
  * so the CharStream includes these characters in the stream.
  */
@@ -101,12 +101,11 @@ class CharStream
     ///
     unittest
     {
-        string filename = ".~testfile";
-        File f = File(filename, "w+"); 
-        CharStream s = new CharStream(f);
+        string filename = "testfile";
+        CharStream s = new CharStream(File(filename, "w+"));
         assert(s.name == filename);
-	s = new CharStream(File.tmpfile());
-	assert(s.name == null); 
+	    s = new CharStream(File.tmpfile());
+	    assert(s.name == null); 
     }
 
     /**
@@ -122,13 +121,13 @@ class CharStream
 
     unittest
     {
-	File f = File.tmpfile();
-	f.write("\nd");
-	f.seek(0);
-	CharStream s = new CharStream(f);
-	assert(s.line == 1);
-	s.popFront();
-	assert(s.line == 2);
+    	File f = File.tmpfile();
+    	f.write("\nd");
+	    f.seek(0);
+	    CharStream s = new CharStream(f);
+	    assert(s.line == 1);
+	    s.popFront();
+	    assert(s.line == 2);
     }
 
     /**
@@ -144,16 +143,16 @@ class CharStream
 
     unittest
     {
-	File f = File.tmpfile();
-	f.write("a\nbe");
-	f.seek(0);
-	CharStream s = new CharStream(f);
-	assert(s.column == 1);
-	s.popFront();
-	assert(s.column == 2);
-	s.popFront();
-	s.popFront();
-	assert(s.column == 2);
+	    File f = File.tmpfile();
+	    f.write("a\nbe");
+	    f.seek(0);
+	    CharStream s = new CharStream(f);
+	    assert(s.column == 1);
+	    s.popFront();
+        assert(s.column == 2);
+        s.popFront();
+        s.popFront();
+        assert(s.column == 2);
     }
 
     /**
@@ -167,7 +166,23 @@ class CharStream
      */
     @property @safe public bool empty() const
     {
-        return this._source.eof();
+        /* Test the underling file is empty, and we've
+         * consumed the entire buffer. This is a bit ugly.
+         * We should rewrite the file & buffer system.
+         */
+        return this._source.eof() && bufferIndex(this.column) == this._buffer.length;
+    }
+    
+    unittest
+    {
+        File f = File.tmpfile();
+        f.write("a");
+        f.seek(0);
+        CharStream s = new CharStream(f);
+        assert(s.empty == false);
+        s.popFront();
+        s.popFront();
+        assert(s.empty == true);
     }
 
     /**
@@ -184,6 +199,18 @@ class CharStream
         return this._buffer[bufferIndex(this._column)];
     }
 
+    unittest
+    {
+        File f = File.tmpfile();
+        f.write("ab");
+        f.seek(0);
+        CharStream s = new CharStream(f);
+        assert(s.front == 'a');
+        assert(s.front == 'a');
+        s.popFront();
+        assert(s.front == 'b');
+    }
+
     /**
      * Remove the next character from the stream.
      *
@@ -197,7 +224,6 @@ class CharStream
      */
     void popFront()
     {
-	import std.conv;
         this._column++;
         if (bufferIndex(this._column) >= this._buffer.length) {
             this._source.readln(this._buffer);
