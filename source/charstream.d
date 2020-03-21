@@ -195,7 +195,8 @@ class CharStream
      *
      * Returns: The next character in the stream.
      */
-    @property char front() {
+    @property char front() const
+    {
         return this._buffer[bufferIndex(this._column)];
     }
 
@@ -225,7 +226,8 @@ class CharStream
     void popFront()
     {
         this._column++;
-        if (bufferIndex(this._column) >= this._buffer.length) {
+        if (bufferIndex(this._column) >= this._buffer.length)
+        {
             this._source.readln(this._buffer);
             this._column = 1;
             this._line++;
