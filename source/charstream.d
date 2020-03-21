@@ -6,9 +6,7 @@
  * License: BSL-1.0.
  */
 
-
 import std.stdio;
-
 
 /**
  * Converts a column number (in the source file) into an
@@ -35,7 +33,6 @@ unittest
     assert(bufferIndex(1) == 0);
     assert(bufferIndex(14) == 13);
 }
-
 
 /**
  * `CharStream` provides a character stream input.
@@ -77,7 +74,7 @@ class CharStream
 
     unittest
     {
-        File f = File.tmpfile(); 
+        File f = File.tmpfile();
         CharStream stream = new CharStream(f);
         assert(stream);
     }
@@ -104,8 +101,8 @@ class CharStream
         string filename = "testfile";
         CharStream s = new CharStream(File(filename, "w+"));
         assert(s.name == filename);
-	    s = new CharStream(File.tmpfile());
-	    assert(s.name == null); 
+        s = new CharStream(File.tmpfile());
+        assert(s.name == null);
     }
 
     /**
@@ -121,13 +118,13 @@ class CharStream
 
     unittest
     {
-    	File f = File.tmpfile();
-    	f.write("\nd");
-	    f.seek(0);
-	    CharStream s = new CharStream(f);
-	    assert(s.line == 1);
-	    s.popFront();
-	    assert(s.line == 2);
+        File f = File.tmpfile();
+        f.write("\nd");
+        f.seek(0);
+        CharStream s = new CharStream(f);
+        assert(s.line == 1);
+        s.popFront();
+        assert(s.line == 2);
     }
 
     /**
@@ -143,12 +140,12 @@ class CharStream
 
     unittest
     {
-	    File f = File.tmpfile();
-	    f.write("a\nbe");
-	    f.seek(0);
-	    CharStream s = new CharStream(f);
-	    assert(s.column == 1);
-	    s.popFront();
+        File f = File.tmpfile();
+        f.write("a\nbe");
+        f.seek(0);
+        CharStream s = new CharStream(f);
+        assert(s.column == 1);
+        s.popFront();
         assert(s.column == 2);
         s.popFront();
         s.popFront();
@@ -172,7 +169,7 @@ class CharStream
          */
         return this._source.eof() && bufferIndex(this.column) == this._buffer.length;
     }
-    
+
     unittest
     {
         File f = File.tmpfile();
@@ -232,5 +229,5 @@ class CharStream
             this._column = 1;
             this._line++;
         }
-    }    
+    }
 }
