@@ -50,10 +50,10 @@ class CharStream
     /** `_source` is the file which characters is read from. */
     private File _source;
 
-    // TODO: Fill this doccomment.
+    /** `_line` is the line the `CharStream` is reading from. */
     private size_t _line = 1;
 
-    // TODO: Fill this doccomment.
+    /** `_column` is the column the `CharStream is reading from. */
     private size_t _column = 1;
 
     /** `_buffer` stores lines read in from the file. */
